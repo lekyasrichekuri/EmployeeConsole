@@ -1,0 +1,80 @@
+[
+  {
+    "EmpId": "TZ1470",
+    "Name": "Chekuri Lekya sri",
+    "DateOfBirth": "28-05-2003",
+    "Email": "lekya@technovert.com",
+    "PhoneNumber": "9059745444",
+    "JoiningDate": "17-01-2024",
+    "Location": "Hyderabad",
+    "JobTitle": "Intern",
+    "Department": "PE",
+    "Manager": "Santhosh",
+    "Project": "Employee Console"
+  },
+  {
+    "EmpId": "TZ1473",
+    "Name": "Chekuri Prasanna",
+    "DateOfBirth": "29-06-2001",
+    "Email": "prasanna@technvert.com",
+    "PhoneNumber": "7989526920",
+    "JoiningDate": "17-01-2024",
+    "Location": "Hyderabad",
+    "JobTitle": "Software Developer",
+    "Department": "Product Engineering",
+    "Manager": "Krishna",
+    "Project": "Web Application"
+  },
+  {
+    "EmpId": "TZ1435",
+    "Name": "Chekuri Rajeswari",
+    "DateOfBirth": "19-06-2000",
+    "Email": "rajeswari@technovert.com",
+    "PhoneNumber": "9293768787",
+    "JoiningDate": "17-01-2024",
+    "Location": "Hyderabad",
+    "JobTitle": "Front end Developer",
+    "Department": "Product Engineering",
+    "Manager": "Pradeep",
+    "Project": "Front end application"
+  },
+  {
+    "EmpId": "TZ1657",
+    "Name": "Chekuri Krishnam Raju",
+    "DateOfBirth": "01-05-1999",
+    "Email": "Krishna@gmail.com",
+    "PhoneNumber": "9948132555",
+    "JoiningDate": "17-01-2024",
+    "Location": "Hyderabad",
+    "JobTitle": "Back end Developer",
+    "Department": "Product Engineering",
+    "Manager": "Sandeep",
+    "Project": "Back end Application"
+  },
+  {
+    "EmpId": "TZ1520",
+    "Name": "Sravanthi Karri",
+    "DateOfBirth": "22-08-2003",
+    "Email": "sravanthi@technovert.com",
+    "PhoneNumber": "7989526989",
+    "JoiningDate": "22-01-2024",
+    "Location": "Hyderabad",
+    "JobTitle": "Intern",
+    "Department": "Product Engineering",
+    "Manager": "Ravi Kiran",
+    "Project": "Console Application"
+  },
+  {
+    "EmpId": "TZ1222",
+    "Name": "QW QWE",
+    "DateOfBirth": "01-01-0001",
+    "Email": "QWE@WE.AS",
+    "PhoneNumber": "1234567890",
+    "JoiningDate": "12-09-1234",
+    "Location": "QWE",
+    "JobTitle": "WE",
+    "Department": "WER",
+    "Manager": "ER",
+    "Project": ""
+  }
+]

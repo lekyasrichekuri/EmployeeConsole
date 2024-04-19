@@ -1,0 +1,50 @@
+[
+  {
+    "RoleName": "Full Stack Developer",
+    "Department": "Product Engineering",
+    "Description": "Works on both front end and back end",
+    "Location": "Hyderabad"
+  },
+  {
+    "RoleName": "Front end Developer",
+    "Department": "Product Engineering",
+    "Description": "Works on front end development of various platforms",
+    "Location": "Bangalore"
+  },
+  {
+    "RoleName": "Back end Developer",
+    "Department": "Product Engineering",
+    "Description": "Works on back end development of various platforms",
+    "Location": "Chennai"
+  },
+  {
+    "RoleName": "UI/UX Developer",
+    "Department": "UI/UX",
+    "Description": "Maintains look and functionality of a product",
+    "Location": "Mumbai"
+  },
+  {
+    "RoleName": "Quality Analyst",
+    "Department": "Quality Analysis",
+    "Description": "Works on testing of the product",
+    "Location": "Hyderabad"
+  },
+  {
+    "RoleName": "Intern",
+    "Department": "Product Engineering",
+    "Description": "Learns about Various languages and implements on the task",
+    "Location": "Hyderabad"
+  },
+  {
+    "RoleName": "Developer",
+    "Department": "PE",
+    "Description": "",
+    "Location": "HYD"
+  },
+  {
+    "RoleName": "i",
+    "Department": "i",
+    "Description": "i",
+    "Location": "i"
+  }
+]
