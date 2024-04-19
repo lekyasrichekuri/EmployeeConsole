@@ -15,7 +15,7 @@ namespace EmployeeConsole.BLL.Services
 
         public bool employeeIdExists(string empId)
         {
-            Dictionary<string, Models.Employee> employees = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\Downloads\\TASKS\\Task 5 - EmployeeConsole ClassLibrary\\EmployeeConsole.Data\\Employees.json", "Employees.json");
+            Dictionary<string, Models.Employee> employees = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
             if (employees.ContainsKey(empId))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -27,10 +27,9 @@ namespace EmployeeConsole.BLL.Services
         }
         public void AddEmployee(Employee emp)
         {
-            Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\Downloads\\TASKS\\Task 5 - EmployeeConsole ClassLibrary\\EmployeeConsole.Data\\Employees.json", "Employees.json");
-
-            employee.Add(emp.EmpId, emp);
-            _employeeJsonOperation.SaveObjectsToJson(employee, "C:\\Users\\lekyasri.c\\Downloads\\TASKS\\Task 5 - EmployeeConsole ClassLibrary\\EmployeeConsole.Data\\Employees.json", "Employees.json");
+            //Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
+            //employee.Add(emp.EmpId, emp);
+            _employeeJsonOperation.SaveObjectsToJson(emp, "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.Json");
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Employee added successfully");
@@ -39,13 +38,13 @@ namespace EmployeeConsole.BLL.Services
 
         public void UpdateEmployee(Employee emp)
         {
-            Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\Downloads\\TASKS\\Task 5 - EmployeeConsole ClassLibrary\\EmployeeConsole.Data\\Employees.json", "Employees.json");
-            employee[emp.EmpId] = emp;
-            _employeeJsonOperation.SaveObjectsToJson(employee, "C:\\Users\\lekyasri.c\\Downloads\\TASKS\\Task 5 - EmployeeConsole ClassLibrary\\EmployeeConsole.Data\\Employees.json", "Employees.json");
+            //Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
+            //employee[emp.EmpId] = emp;
+            _employeeJsonOperation.SaveObjectsToJson(emp, "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
         }
         public void DeleteEmployee(string empId)
         {
-            Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\Downloads\\TASKS\\Task 5 - EmployeeConsole ClassLibrary\\EmployeeConsole.Data\\Employees.json", "Employees.json");
+            Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
             if (!employee.ContainsKey(empId))
             {
                 Console.ForegroundColor = ConsoleColor.Red;
@@ -54,14 +53,14 @@ namespace EmployeeConsole.BLL.Services
                 return;
             }
             employee.Remove(empId);
-            _employeeJsonOperation.SaveObjectsToJson(employee, "C:\\Users\\lekyasri.c\\Downloads\\TASKS\\Task 5 - EmployeeConsole ClassLibrary\\EmployeeConsole.Data\\Employees.json", "Employees.json");
+           // _employeeJsonOperation.SaveObjectsToJson(employee, "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Employee deleted successfully");
             Console.ResetColor();
         }
         public Dictionary<string, Employee> DisplayEmployees()
         {
-            Dictionary<string, Models.Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\Downloads\\TASKS\\Task 5 - EmployeeConsole ClassLibrary\\EmployeeConsole.Data\\Employees.json", "Employees.json");
+            Dictionary<string, Models.Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
 
             if (!employee.Any())
             {
@@ -74,7 +73,7 @@ namespace EmployeeConsole.BLL.Services
 
         public Employee DisplayEmpDetails(string empId)
         {
-            Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\Downloads\\TASKS\\Task 5 - EmployeeConsole ClassLibrary\\EmployeeConsole.Data\\Employees.json", "Employees.json");
+            Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
 
             if (!employee.ContainsKey(empId))
             {
@@ -88,7 +87,7 @@ namespace EmployeeConsole.BLL.Services
         }
         public Employee UpdateEmployee(string empId)
         {
-            Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\Downloads\\TASKS\\Task 5 - EmployeeConsole ClassLibrary\\EmployeeConsole.Data\\Employees.json", "Employees.json");
+            Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
             if (!employee.ContainsKey(empId))
             {
                 Console.ForegroundColor = ConsoleColor.Red;

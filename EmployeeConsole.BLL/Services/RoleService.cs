@@ -2,6 +2,7 @@
 using EmployeeConsole.BLL.Interfaces;
 using EmployeeConsole.DAL.Interfaces;
 using System.Data;
+using System.Reflection;
 
 namespace EmployeeConsole.BLL.Services
 {
@@ -28,11 +29,9 @@ namespace EmployeeConsole.BLL.Services
         }
         public void AddRole(Role role)
         {
-
-            List<Role> roles = _roleJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Roles.Json", "Roles.Json");
-            roles.Add(role);
-            _roleJsonOperation.SaveObjectsToJson(roles, "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Roles.Json", "Roles.Json");
-
+            //List<Role> roles = _roleJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Roles.Json", "Roles.Json");
+            //roles.Add(role);
+            _roleJsonOperation.SaveObjectsToJson(role, "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Roles.Json", "Roles.Json");
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Role added successfully");

@@ -63,18 +63,5 @@
     "Department": "Product Engineering",
     "Manager": "Ravi Kiran",
     "Project": "Console Application"
-  },
-  {
-    "EmpId": "TZ1222",
-    "Name": "QW QWE",
-    "DateOfBirth": "01-01-0001",
-    "Email": "QWE@WE.AS",
-    "PhoneNumber": "1234567890",
-    "JoiningDate": "12-09-1234",
-    "Location": "QWE",
-    "JobTitle": "WE",
-    "Department": "WER",
-    "Manager": "ER",
-    "Project": ""
   }
 ]
