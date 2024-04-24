@@ -16,7 +16,7 @@ namespace EmployeeConsole.BLL.Services
 
         public bool IsRoleNameExists(string roleName)
         {
-            List<Models.Role> rolesList = _roleJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Roles.Json", "Roles.Json");
+            List<Models.Role> rolesList = _roleJsonOperation.LoadExistingJsonFile();
             var roleNames = rolesList.Select(role => role.RoleName);
             if (roleNames.Contains(roleName))
             { 
@@ -26,15 +26,15 @@ namespace EmployeeConsole.BLL.Services
         }
         public bool AddRole(Role role)
         {
-            List<Role> roles = _roleJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Roles.Json", "Roles.Json");
+            List<Role> roles = _roleJsonOperation.LoadExistingJsonFile();
             roles.Add(role);
-            _roleJsonOperation.SaveObjectsToJson(roles, "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Roles.Json", "Roles.Json");
+            _roleJsonOperation.SaveObjectsToJson(roles);
             return true;
         }
 
         public List<Role> DisplayAll()
         {
-            List<Models.Role> role = _roleJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Roles.Json", "Roles.Json");
+            List<Models.Role> role = _roleJsonOperation.LoadExistingJsonFile();
             return role;
         }
     }

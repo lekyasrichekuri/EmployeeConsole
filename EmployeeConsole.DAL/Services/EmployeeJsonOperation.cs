@@ -7,7 +7,8 @@ namespace EmployeeConsole.DAL.Services
 {
     public class EmployeeJsonOperation : IEmployeeJsonOperation
     {
-        public void SaveObjectsToJson(Dictionary<string,Employee> objects, string jsonFilePath, string filename)
+        public string jsonFilePath = "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json" ;
+        public void SaveObjectsToJson(Dictionary<string,Employee> objects)
         {
             string json = JsonSerializer.Serialize(objects.Values, new JsonSerializerOptions { WriteIndented = true });
             try
@@ -27,7 +28,7 @@ namespace EmployeeConsole.DAL.Services
 
         }
 
-        public Dictionary<string, Employee> LoadExistingJsonFile(string jsonFilePath, string employees)
+        public Dictionary<string, Employee> LoadExistingJsonFile()
         {
             try
             {

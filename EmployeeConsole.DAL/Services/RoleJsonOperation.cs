@@ -7,7 +7,8 @@ namespace EmployeeConsole.DAL.Services
 {
     public class RoleJsonOperation : IRoleJsonOperation
     {
-        public List<Role> LoadExistingJsonFile(string jsonFilePath, string roles)
+        public string jsonFilePath = "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Roles.Json";
+        public List<Role> LoadExistingJsonFile()
         {
             try
             {
@@ -21,7 +22,7 @@ namespace EmployeeConsole.DAL.Services
             }
         }
 
-        public void SaveObjectsToJson(List<Role> objects, string jsonFilePath, string fileName)
+        public void SaveObjectsToJson(List<Role> objects)
         {
             string json = JsonSerializer.Serialize(objects, new JsonSerializerOptions { WriteIndented = true });
             try
