@@ -9,16 +9,6 @@ namespace EmployeeConsole.DAL.Services
     {
         public List<Role> LoadExistingJsonFile(string jsonFilePath, string roles)
         {
-            //string filePath = Path.GetFullPath("Roles.json");
-            //if (File.Exists(filePath))
-            //{
-            //    string json = File.ReadAllText(filePath);
-            //    return JsonSerializer.Deserialize<List<Role>>(json) ?? new List<Role>();
-            //}
-            //else
-            //{
-            //    return new List<Role>();
-            //}
             try
             {
                 string json = File.ReadAllText(jsonFilePath);
@@ -31,27 +21,23 @@ namespace EmployeeConsole.DAL.Services
             }
         }
 
-        public void SaveObjectsToJson(Role objects, string jsonFilePath, string fileName)
+        public void SaveObjectsToJson(List<Role> objects, string jsonFilePath, string fileName)
         {
-            //string filePath = Path.GetFullPath("Roles.json");
-            //if (File.Exists(filePath))
-            //{
-            //    string json = JsonSerializer.Serialize(objects, new JsonSerializerOptions { WriteIndented = true });
-            //    File.WriteAllText(filePath, json);
-            //}
-            //File.WriteAllText(jsonFilePath, json);
-
             string json = JsonSerializer.Serialize(objects, new JsonSerializerOptions { WriteIndented = true });
             try
             {
                 if(File.Exists(jsonFilePath))
-                File.AppendAllText(jsonFilePath, json);
+                    File.WriteAllText(jsonFilePath, json);
+                else
+                {
+                    File.Create("Roles.json");
+                    File.WriteAllText(jsonFilePath, json);
+                }
+
             }
             catch (FileNotFoundException)
             {
                 Console.WriteLine("File not found");
-                File.Create("Roles.json");
-                File.WriteAllText(jsonFilePath, json);
             }
         }
     }

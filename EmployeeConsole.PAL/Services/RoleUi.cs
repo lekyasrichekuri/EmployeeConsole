@@ -33,7 +33,7 @@ namespace EmployeeConsole.PAL.Services
                         AddRole();
                         break;
                     case 2:
-                        DisplayAll();
+                        DisplayAllRoles();
                         break;
                     case 3:
                         isValid = false;
@@ -49,40 +49,56 @@ namespace EmployeeConsole.PAL.Services
 
         public void AddRole()
         {
-            Models.Role r = new Models.Role();
+            Models.Role role = new Models.Role();
             string roleName = ValidateText("Role Name");
-            r.RoleName = roleName;
+            role.RoleName = roleName;
 
-            if (_roleService.roleNameExists(roleName) == false)
+            if (_roleService.IsRoleNameExists(roleName) == false)
             {
-                return;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Role already exists");
+                Console.ResetColor();
+                AddRole();
             }
 
             string department = ValidateText("Department");
-            r.Department = department;
+            role.Department = department;
 
             string description = ValidateText("Description");
-            r.Description = description;
+            role.Description = description;
 
             string location = ValidateText("Location");
-            r.Location = location;
+            role.Location = location;
 
-            _roleService.AddRole(r);
+            if(_roleService.AddRole(role))
+            { 
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Role added successfully");
+                Console.ResetColor();
+            }
         }
 
-        public void DisplayAll()
+        public void DisplayAllRoles()
         {
-            List<Models.Role> role = _roleService.DisplayAll();
-            foreach (var r in role)
+            List<Models.Role> roles = _roleService.DisplayAll();
+            if (!roles.Any())
             {
-                Console.WriteLine("Role Details:");
-                Console.WriteLine($"Role Name: {r.RoleName}");
-                Console.WriteLine($"Department: {r.Department}");
-                Console.WriteLine($"Description: {r.Description}");
-                Console.WriteLine($"Location: {r.Location}");
-                Console.WriteLine("======================================");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("No roles to display");
+                Console.ResetColor();
             }
-            
+            else
+            {
+                foreach (var role in roles)
+                {
+                    Console.WriteLine("Role Details:");
+                    Console.WriteLine($"Role Name: {role.RoleName}");
+                    Console.WriteLine($"Department: {role.Department}");
+                    Console.WriteLine($"Description: {role.Description}");
+                    Console.WriteLine($"Location: {role.Location}");
+                    Console.WriteLine("======================================");
+                }
+            }
         }
 
         public string ValidateText(string type)
@@ -112,6 +128,5 @@ namespace EmployeeConsole.PAL.Services
             return text;
         }
     }
-
 }
 

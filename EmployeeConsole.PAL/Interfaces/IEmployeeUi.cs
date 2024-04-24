@@ -4,6 +4,10 @@
     {
         void DisplayEmployees();
         void AddEmployee();
+        string GenerateEmployeeId();
+        string DisplayJobTitles();
+        string DisplayDepartmentsForRole(string selectedRole);
+        string DisplayLocationsForRoleAndDepartment(string selectedRole, string selectedDepartment);
         void UpdateEmployee();
         void DisplayEmpDetails();
         void DeleteEmployee();
@@ -14,5 +18,4 @@
         string ValidateEmail();
         string ValidatePhoneNumber();
     }
-
 }

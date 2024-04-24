@@ -13,90 +13,56 @@ namespace EmployeeConsole.BLL.Services
             _employeeJsonOperation = employeeJsonOperation;
         }
 
-        public bool employeeIdExists(string empId)
+        public bool IsEmployeeIdExists(string employeeId)
         {
             Dictionary<string, Models.Employee> employees = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
-            if (employees.ContainsKey(empId))
+            if (employees.ContainsKey(employeeId))
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Employee Id already exists");
-                Console.ResetColor();
                 return false;
             }
             return true;
         }
-        public void AddEmployee(Employee emp)
+        public bool AddEmployee(Employee employee)
         {
-            //Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
-            //employee.Add(emp.EmpId, emp);
-            _employeeJsonOperation.SaveObjectsToJson(emp, "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.Json");
-
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Employee added successfully");
-            Console.ResetColor();
+            Dictionary<string, Employee> employees = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
+            employees.Add(employee.EmployeeId, employee);
+            _employeeJsonOperation.SaveObjectsToJson(employees, "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.Json");
+            return true;
         }
 
-        public void UpdateEmployee(Employee emp)
+        public void UpdateEmployee(Employee employee)
         {
-            //Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
-            //employee[emp.EmpId] = emp;
-            _employeeJsonOperation.SaveObjectsToJson(emp, "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
+            Dictionary<string, Employee> employees = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
+            employees[employee.EmployeeId] = employee;
+            _employeeJsonOperation.SaveObjectsToJson(employees, "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
         }
-        public void DeleteEmployee(string empId)
+        public bool DeleteEmployee(string employeeId)
         {
             Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
-            if (!employee.ContainsKey(empId))
+            if (!employee.ContainsKey(employeeId))
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Employee Id does not exist");
-                Console.ResetColor();
-                return;
+                return false; 
             }
-            employee.Remove(empId);
-           // _employeeJsonOperation.SaveObjectsToJson(employee, "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Employee deleted successfully");
-            Console.ResetColor();
+            employee.Remove(employeeId);
+             _employeeJsonOperation.SaveObjectsToJson(employee, "C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
+            return true;
         }
         public Dictionary<string, Employee> DisplayEmployees()
         {
             Dictionary<string, Models.Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
-
-            if (!employee.Any())
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("No employees to display");
-                Console.ResetColor();
-            }
             return employee;
         }
 
-        public Employee DisplayEmpDetails(string empId)
+        public Employee DisplayEmpDetails(string employeeId)
         {
             Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
 
-            if (!employee.ContainsKey(empId))
+            if (!employee.ContainsKey(employeeId))
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Employee Id does not exist");
-                Console.ResetColor();
                 return null;
             }
-            Employee emp = employee[empId];
-            return emp;
-        }
-        public Employee UpdateEmployee(string empId)
-        {
-            Dictionary<string, Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\source\\repos\\CSharp\\EC1\\EmployeeConsole\\EmployeeConsole.Data\\Employees.Json", "Employees.json");
-            if (!employee.ContainsKey(empId))
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Employee id does not exists");
-                Console.ResetColor();
-                return null;
-            }
-            Employee emp = employee[empId];
-            return emp;
+            Employee employ = employee[employeeId];
+            return employ;
         }
     }
 }

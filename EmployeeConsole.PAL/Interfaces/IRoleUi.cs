@@ -3,7 +3,7 @@
     public interface IRoleUi
     {
         void AddRole();
-        void DisplayAll();
+        void DisplayAllRoles();
         void RoleManager();
         string ValidateText(string type);
     }

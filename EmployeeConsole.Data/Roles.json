@@ -18,10 +18,28 @@
     "Location": "Chennai"
   },
   {
+    "RoleName": "Angular Developer",
+    "Department": "Product Engineering",
+    "Description": "Works on angular development",
+    "Location": "Chennai"
+  },
+  {
+    "RoleName": "Angular Developer",
+    "Department": "CRM",
+    "Description": "Works on angular development",
+    "Location": "Mumbai"
+  },
+  {
     "RoleName": "UI/UX Developer",
     "Department": "UI/UX",
     "Description": "Maintains look and functionality of a product",
     "Location": "Mumbai"
+  },
+  {
+    "RoleName": "UI/UX Developer",
+    "Department": "PE",
+    "Description": "Maintains look and functionality of a product",
+    "Location": "Bangalore"
   },
   {
     "RoleName": "Quality Analyst",
@@ -37,13 +55,14 @@
   },
   {
     "RoleName": "Developer",
-    "Department": "PE",
+    "Department": "Product Engineering",
     "Description": "",
-    "Location": "HYD"
+    "Location": "Hyderabad"
+  },
+  {
+    "RoleName": "Senior Software Developer",
+    "Department": "Product Engineering",
+    "Description": "Product Engineering",
+    "Location": "Hyderabad"
   }
-]{
-  "RoleName": "q",
-  "Department": "q",
-  "Description": "q",
-  "Location": "q"
-}
+]

@@ -3,16 +3,21 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using EmployeeConsole.BLL.Interfaces;
 using EmployeeConsole.PAL.Interfaces;
+using EmployeeConsole.PAL.Exceptions;
+using EmployeeConsole.Models;
 
 namespace EmployeeConsole.PAL.Services
 {
     public class EmployeeUi : IEmployeeUi
     {
         private readonly IEmployeeService _employeeService;
-        public EmployeeUi( IEmployeeService employeeService)
+        private readonly IRoleService _roleService;
+        public EmployeeUi( IEmployeeService employeeService,IRoleService roleService)
         {
             _employeeService = employeeService;
+            _roleService = roleService;
         }
+     
         public void EmployeeManager()
         {
             bool isValid = true;
@@ -63,82 +68,243 @@ namespace EmployeeConsole.PAL.Services
         public void DisplayEmployees()
         {
             Dictionary<string, Models.Employee> employee = _employeeService.DisplayEmployees();
-            foreach (var emp in employee)
+            if (!employee.Any())
             {
-                Console.WriteLine("Employee Details:");
-                Console.WriteLine($"Employee Id: {emp.Key}");
-                Console.WriteLine($"Full Name: {emp.Value.Name}");
-                Console.WriteLine($"Role: {emp.Value.JobTitle}");
-                Console.WriteLine($"Department: {emp.Value.Department}");
-                Console.WriteLine($"Location: {emp.Value.Location}");
-                Console.WriteLine($"Joining Date: {emp.Value.JoiningDate}");
-                Console.WriteLine($"Manager Name: {emp.Value.Manager}");
-                Console.WriteLine($"Project Name: {emp.Value.Project}");
-                Console.WriteLine("======================================");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("No employees to display");
+                Console.ResetColor();
+            }
+            else
+            {
+                foreach (var employ in employee)
+                {
+                    Console.WriteLine("Employee Details:");
+                    Console.WriteLine($"Employee Id: {employ.Key}");
+                    Console.WriteLine($"Full Name: {employ.Value.Name}");
+                    Console.WriteLine($"Role: {employ.Value.JobTitle}");
+                    Console.WriteLine($"Department: {employ.Value.Department}");
+                    Console.WriteLine($"Location: {employ.Value.Location}");
+                    Console.WriteLine($"Joining Date: {employ.Value.JoiningDate}");
+                    Console.WriteLine($"Manager Name: {employ.Value.Manager}");
+                    Console.WriteLine($"Project Name: {employ.Value.ProjectName}");
+                    Console.WriteLine("======================================");
+                }
             }
         }
+
         public void AddEmployee()
         {
-            Models.Employee emp = new Models.Employee();
-            string empId = ValidateEmployeeId();
-            emp.EmpId = empId;
+            Models.Employee employee = new Models.Employee();
 
-            if (_employeeService.employeeIdExists(empId) == false)
+            string employeeId = GenerateEmployeeId();
+            employee.EmployeeId = employeeId; 
+
+            if (_employeeService.IsEmployeeIdExists(employeeId) == false)
             {
-                return;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Employee Id already exists");
+                Console.ResetColor();
+                AddEmployee();
             }
 
             string firstName = ValidateText("First Name");
             string lastName = ValidateText("Last Name");
-            emp.Name = firstName + " " + lastName;
+            employee.Name = firstName + " " + lastName;
 
-            DateTime dob = ValidateDate("Birth");
-            emp.DateOfBirth = dob.ToShortDateString();
+            DateTime dateOfBirth = ValidateDate("Birth");
+            employee.DateOfBirth = dateOfBirth.ToShortDateString();
 
             string email = ValidateEmail();
-            emp.Email = email;
+            employee.Email = email;
 
             string phoneNumber = ValidatePhoneNumber();
-            emp.PhoneNumber = phoneNumber;
+            employee.PhoneNumber = phoneNumber;
 
             DateTime joinDate = ValidateDate("Joining");
-            emp.JoiningDate = joinDate.ToShortDateString();
+            employee.JoiningDate = joinDate.ToShortDateString();
 
-            string location = ValidateText("Location");
-            emp.Location = location;
+            string jobTitle = DisplayJobTitles();
+            employee.JobTitle = jobTitle;
 
-            string jobTitle = ValidateText("Job Title");
-            emp.JobTitle = jobTitle;
+            string department = DisplayDepartmentsForRole(jobTitle);
+            employee.Department = department;
 
-            string department = ValidateText("Department");
-            emp.Department = department;
+            string location = DisplayLocationsForRoleAndDepartment(jobTitle, department);
+            employee.Location = location;
 
             string manager = ValidateText("Manager");
-            emp.Manager = manager;
+            employee.Manager = manager;
 
             string project = ValidateText("Project");
-            emp.Project = project;
+            employee.ProjectName = project;
 
-            _employeeService.AddEmployee(emp);
+            if(_employeeService.AddEmployee(employee))
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Employee added successfully");
+                Console.ResetColor();
+            }
         }
+
+        public string GenerateEmployeeId()
+        {
+            Dictionary<string, Employee> employees = _employeeService.DisplayEmployees();
+            int maximumId = 0;
+            foreach (var employee in employees.Values)
+            {
+                int idNumber;
+                if (int.TryParse(employee.EmployeeId.Substring(2), out idNumber))
+                {
+                    if (idNumber > maximumId)
+                    {
+                        maximumId = idNumber;
+                    }
+                }
+            }
+            string nextEmployeeId = "TZ" + (maximumId + 1).ToString().PadLeft(4, '0');
+            return nextEmployeeId;
+        }
+
+        public string DisplayJobTitles()
+        {
+            var jobTitles = _roleService.DisplayAll()
+                .Select(role => role.RoleName)
+                .Distinct()
+                .ToList();
+
+            if (jobTitles.Any())
+            {
+                Console.WriteLine("Select a Job Title:");
+                int index = 1;
+                foreach (var title in jobTitles)
+                {
+                    Console.WriteLine(index + ". " + title);
+                    index++;
+                }
+                int jobRole;
+                if (!int.TryParse(Console.ReadLine(), out jobRole))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid option. Please enter a number.");
+                    Console.ResetColor();
+                }
+                if (jobRole==0 || jobRole>=index)
+                {
+                    Console.WriteLine("Enter the correct option");
+                    return DisplayJobTitles();
+                }
+                else
+                {
+                    return jobTitles[jobRole - 1];
+                }
+            }
+            else
+            {
+                Console.WriteLine("No job titles found.");
+            }
+            return "";
+        }
+
+        public string DisplayDepartmentsForRole(string selectedRole)
+        {
+            var roles = _roleService.DisplayAll()
+                .Where(role => role.RoleName.Equals(selectedRole, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (roles.Any())
+            {
+                var departments = roles
+                    .Select(role => role.Department)
+                    .Distinct()
+                    .ToList();
+
+                Console.WriteLine("Select a Department:");
+                int index = 1;
+                foreach (var depart in departments)
+                {
+                    Console.WriteLine(index + ". " + depart);
+                    index++;
+                }
+                int department;
+                if (!int.TryParse(Console.ReadLine(), out department))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid option. Please enter a number.");
+                    Console.ResetColor();
+                }
+                if (department == 0 || department >= index)
+                {
+                    Console.WriteLine("Enter the correct option:");
+                    return DisplayDepartmentsForRole(selectedRole);
+                }
+                else
+                {
+                    return departments[department - 1];
+                }
+            }
+            else
+            {
+                Console.WriteLine("No Departments found with the role.");
+                return "";
+            }
+        }
+
+
+        public string DisplayLocationsForRoleAndDepartment(string selectedRole, string selectedDepartment)
+        {
+            var roles = _roleService.DisplayAll()
+                .Where(role => role.RoleName.Equals(selectedRole, StringComparison.OrdinalIgnoreCase))
+                .Where(role => role.Department.Equals(selectedDepartment, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (roles.Any())
+            {
+                var locations = roles
+                    .Select(role => role.Location)
+                    .Distinct()
+                    .ToList();
+                Console.WriteLine("Select a Department:");
+                int index = 1;
+                foreach (var loc in locations)
+                {
+                    Console.WriteLine(index + ". " + loc);
+                    index++;
+                }
+                int location;
+                if (!int.TryParse(Console.ReadLine(), out location))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid option. Please enter a number.");
+                    Console.ResetColor();
+                }
+                if (location == 0 || location >= index)
+                {
+                    Console.WriteLine("Enter the correct option:");
+                    return DisplayLocationsForRoleAndDepartment(selectedRole, selectedDepartment);
+                }
+                else
+                {
+                    return locations[location - 1];
+                }
+            }
+            else
+            {
+                Console.WriteLine("No locations found with the role and department.");
+                return "";
+            }
+        }
+
 
         public void UpdateEmployee()
         {
-            Console.WriteLine("Enter the employee id to be updated:");
-            string empid = Console.ReadLine() ?? "";
-            //Dictionary<string, Models.Employee> employee = _employeeJsonOperation.LoadExistingJsonFile("C:\\Users\\lekyasri.c\\Downloads\\TASKS\\Task 5 - EmployeeConsole ClassLibrary\\EmployeeConsole.Data\\Employees.json", "Employees.json");
-            //if (!employee.ContainsKey(empid))
-            //{
-            //    Console.ForegroundColor = ConsoleColor.Red;
-            //    Console.WriteLine("Employee id does not exists");
-            //    Console.ResetColor();
-            //    return;
-            //}
-            //Models.Employee emp = employee[empid];
-            Models.Employee emp = _employeeService.UpdateEmployee(empid);
-            if(emp==null)
+            string employeeId = ValidateEmployeeId();
+            Models.Employee employee = _employeeService.DisplayEmpDetails(employeeId);
+            if(employee==null)
             {
-                return;
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Employee id does not exists");
+                Console.ResetColor();
+                UpdateEmployee();
             }
             bool toUpdate = true;
             while (toUpdate)
@@ -147,9 +313,9 @@ namespace EmployeeConsole.PAL.Services
                 Console.WriteLine("1. Name");
                 Console.WriteLine("2. Email");
                 Console.WriteLine("3. Phone number");
-                Console.WriteLine("4. Location");
-                Console.WriteLine("5. Job Title");
-                Console.WriteLine("6. Department");
+                Console.WriteLine("4. Job Tile");
+                Console.WriteLine("5. Department");
+                Console.WriteLine("6. Location");
                 Console.WriteLine("7. Manager");
                 Console.WriteLine("8. Project");
                 Console.WriteLine("9. Go Back");
@@ -164,28 +330,28 @@ namespace EmployeeConsole.PAL.Services
                 switch (option)
                 {
                     case 1:
-                        emp.Name = ValidateText("Name");
+                        employee.Name = ValidateText("Name");
                         break;
                     case 2:
-                        emp.Email = ValidateEmail();
+                        employee.Email = ValidateEmail();
                         break;
                     case 3:
-                        emp.PhoneNumber = ValidatePhoneNumber();
+                        employee.PhoneNumber = ValidatePhoneNumber();
                         break;
                     case 4:
-                        emp.Location = ValidateText("Location");
+                        employee.JobTitle = DisplayJobTitles();
                         break;
                     case 5:
-                        emp.JobTitle = ValidateText("Job Title");
+                        employee.Department = DisplayDepartmentsForRole(employee.JobTitle);
                         break;
                     case 6:
-                        emp.Department = ValidateText("Department");
+                        employee.Location = DisplayLocationsForRoleAndDepartment(employee.JobTitle,employee.Department);
                         break;
                     case 7:
-                        emp.Manager = ValidateText("Manager");
+                        employee.Manager = ValidateText("Manager");
                         break;
                     case 8:
-                        emp.Project = ValidateText("Project");
+                        employee.ProjectName = ValidateText("Project");
                         break;
                     case 9:
                         toUpdate = false;
@@ -196,58 +362,72 @@ namespace EmployeeConsole.PAL.Services
                         Console.ResetColor();
                         break;
                 }
-                if (option != 9)
+                if (option!=0 && option<=8)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Employee details updated successfully");
                     Console.ResetColor();
                 }
-                _employeeService.UpdateEmployee(emp);
+                _employeeService.UpdateEmployee(employee);
             }
         }
 
         public void DisplayEmpDetails()
         {
-            Console.WriteLine("Enter Employee ID to view details:");
-            string empId = Console.ReadLine() ?? "";
-            Models.Employee emp = _employeeService.DisplayEmpDetails(empId);
-            if(emp==null)
+            string employeeId = ValidateEmployeeId();
+            Models.Employee employee = _employeeService.DisplayEmpDetails(employeeId);
+            if (employee==null)
             {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Employee Id does not exist");
+                Console.ResetColor();
+                DisplayEmpDetails();
                 return;
             }
             Console.WriteLine("Employee Details:");
             PropertyInfo[] properties = typeof(Models.Employee).GetProperties();
             foreach (PropertyInfo property in properties)
             {
-                Console.WriteLine($"{property.Name}: {property.GetValue(emp)}");
+                Console.WriteLine($"{property.Name}: {property.GetValue(employee)}");
             }
         }
 
         public void DeleteEmployee()
         {
-            Console.WriteLine("Enter Employee ID to delete:");
-            string empId = Console.ReadLine() ?? "";
-            _employeeService.DeleteEmployee(empId);
+            string employeeId = ValidateEmployeeId();
+            if(_employeeService.DeleteEmployee(employeeId)== true)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Employee deleted successfully");
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Employee Id does not exist");
+                Console.ResetColor();
+                DeleteEmployee();
+            }
         }
 
         public string ValidateEmployeeId()
         {
-            string empId = "";
-            bool isValidEmpId = false;
-            while (!isValidEmpId)
+            string employeeId = "";
+            bool isValidEmployeeId = false;
+            while (!isValidEmployeeId)
             {
                 Console.WriteLine("Enter Employee Id in the format(TZ0001):");
-                empId = Console.ReadLine() ?? "";
+                employeeId = Console.ReadLine() ?? "";
                 string pattern = @"TZ\d{4}$";
-                if (empId == "TZ0000")
+                if (employeeId == "TZ0000")
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Employee ID is not valid");
                     Console.ResetColor();
                 }
-                else if (Regex.IsMatch(empId, pattern))
+                else if (Regex.IsMatch(employeeId, pattern))
                 {
-                    isValidEmpId = true;
+                    isValidEmployeeId = true;
                 }
                 else
                 {
@@ -256,7 +436,7 @@ namespace EmployeeConsole.PAL.Services
                     Console.ResetColor();
                 }
             }
-            return empId;
+            return employeeId;
         }
 
         public string ValidateText(string type)
@@ -299,7 +479,24 @@ namespace EmployeeConsole.PAL.Services
                 }
                 else if (DateTime.TryParseExact(input, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
                 {
-                    return date;
+                    try
+                    {
+                        if (type == "Birth" && CalculateAge(date) < 18)
+                        {
+                            throw new InvalidAgeException("Age must be greater than 18");
+                        }
+                        else if(type == "Birth" && CalculateAge(date) > 60)
+                        {
+                            throw new InvalidAgeException("Age must be less than 60");
+                        }
+                        return date;
+                    }
+                    catch (InvalidAgeException ex) 
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine(ex.Message);
+                        Console.ResetColor();
+                    }
                 }
                 else
                 {
@@ -308,6 +505,16 @@ namespace EmployeeConsole.PAL.Services
                     Console.ResetColor();
                 }
             }
+        }
+
+        private int CalculateAge(DateTime birthDate)
+        {
+            int age = DateTime.Now.Year - birthDate.Year;
+            if(DateTime.Now.DayOfYear<birthDate.DayOfYear)
+            {
+                age--;
+            }
+            return age;
         }
 
         public string ValidateEmail()
@@ -344,10 +551,16 @@ namespace EmployeeConsole.PAL.Services
                 {
                     isValidPhoneNumber = true;
                 }
-                else if (string.IsNullOrEmpty(phoneNumber) || phoneNumber.Length != 10 || !IsNumeric(phoneNumber))
-                {
+                else if (phoneNumber.Length != 10 || !IsNumeric(phoneNumber))
+                { 
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Enter a valid 10-digit PhoneNumber containing only digits.");
+                    Console.ResetColor();
+                }
+                else if (phoneNumber.Substring(0, 1) == "0")
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Phone Number cannot start with 0");
                     Console.ResetColor();
                 }
                 else
@@ -358,11 +571,11 @@ namespace EmployeeConsole.PAL.Services
             return phoneNumber;
         }
 
-        public static bool IsNumeric(string str)
+        public static bool IsNumeric(string phoneNumber)
         {
-            foreach (char c in str)
+            foreach (char character in phoneNumber)
             {
-                if (!char.IsDigit(c))
+                if (!char.IsDigit(character))
                 {
                     return false;
                 }

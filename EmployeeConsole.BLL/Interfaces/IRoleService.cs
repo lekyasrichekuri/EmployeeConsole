@@ -5,9 +5,8 @@ namespace EmployeeConsole.BLL.Interfaces
 {
     public interface IRoleService
     {
-        bool roleNameExists(string roleName);
-        void AddRole(Role role);
-
+        bool IsRoleNameExists(string roleName);
+        bool AddRole(Role role);
         List<Role> DisplayAll();
     }
 }

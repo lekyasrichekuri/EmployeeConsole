@@ -3,13 +3,12 @@ namespace EmployeeConsole.BLL.Interfaces
 {
     public interface IEmployeeService
     {
-        bool employeeIdExists(string empId);
-        void AddEmployee(Employee emp);
-        void UpdateEmployee(Employee emp);
-        void DeleteEmployee(string empid);
+        bool IsEmployeeIdExists(string employeeId);
+        bool AddEmployee(Employee employee);
+        void UpdateEmployee(Employee employee);
+        bool DeleteEmployee(string employeeId);
         Dictionary<string, Employee> DisplayEmployees();
-        Employee DisplayEmpDetails(string empid);
-        Employee UpdateEmployee(string empid);
+        Employee DisplayEmpDetails(string employeeId);
     }
 
 }

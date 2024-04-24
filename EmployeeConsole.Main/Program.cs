@@ -26,7 +26,14 @@ namespace EmployeeConsole.Main
                 Console.WriteLine("1. Employee Management");
                 Console.WriteLine("2. Role Management");
                 Console.WriteLine("3. Exit");
-                int option = Convert.ToInt16(Console.ReadLine());
+                int option;
+                if (!int.TryParse(Console.ReadLine(), out option))
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid option. Please enter a number.");
+                    Console.ResetColor();
+                    continue;
+                }
                 switch (option)
                 {
                     case 1:
