@@ -14,8 +14,10 @@ namespace EmployeeConsole.Main
         {
             var serviceProvider = new ServiceCollection()
                                   .AddTransient<IEmployeeService, EmployeeService>()
+                                  .AddTransient<ILocationService, LocationService>()
                                   .AddTransient<IRoleService, RoleService>()
                                   .AddTransient<IEmployeeJsonOperation, EmployeeJsonOperation>()
+                                  .AddTransient<ILocationJsonOperation, LocationJsonOperation>()
                                   .AddTransient<IRoleJsonOperation, RoleJsonOperation>()
                                   .AddTransient<IEmployeeUi, EmployeeUi>()
                                   .AddTransient<IRoleUi, RoleUi>()
@@ -34,24 +36,27 @@ namespace EmployeeConsole.Main
                     Console.ResetColor();
                     continue;
                 }
-                switch (option)
+                else
                 {
-                    case 1:
-                        var employeeUI = serviceProvider.GetRequiredService<IEmployeeUi>();
-                        employeeUI.EmployeeManager();
-                        break;
-                    case 2:
-                        var roleUI = serviceProvider.GetRequiredService<IRoleUi>();
-                        roleUI.RoleManager();
-                        break;
-                    case 3:
-                        Environment.Exit(0);
-                        break;
-                    default:
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Enter a valid option");
-                        Console.ResetColor();
-                        break;
+                    switch (option)
+                    {
+                        case 1:
+                            var employeeUI = serviceProvider.GetRequiredService<IEmployeeUi>();
+                            employeeUI.EmployeeManager();
+                            break;
+                        case 2:
+                            var roleUI = serviceProvider.GetRequiredService<IRoleUi>();
+                            roleUI.RoleManager();
+                            break;
+                        case 3:
+                            Environment.Exit(0);
+                            break;
+                        default:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Enter a valid option");
+                            Console.ResetColor();
+                            break;
+                    }
                 }
             }
         }

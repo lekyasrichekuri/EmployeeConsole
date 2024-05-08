@@ -5,15 +5,15 @@ VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeConsole.Main", "EmployeeConsole.Main\EmployeeConsole.Main.csproj", "{C24A785C-9B5D-4257-8A24-4A524385C58D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeConsole.BLL", "EmployeeConsole.BLL\EmployeeConsole.BLL.csproj", "{6453BCA0-5E67-4664-99D6-70430DBDBBE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeConsole.BLL", "EmployeeConsole.BLL\EmployeeConsole.BLL.csproj", "{6453BCA0-5E67-4664-99D6-70430DBDBBE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeConsole.DAL", "EmployeeConsole.DAL\EmployeeConsole.DAL.csproj", "{3ED7D731-D22B-49CC-BE6B-DD404A30A43F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeConsole.DAL", "EmployeeConsole.DAL\EmployeeConsole.DAL.csproj", "{3ED7D731-D22B-49CC-BE6B-DD404A30A43F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeConsole.PAL", "EmployeeConsole.PAL\EmployeeConsole.PAL.csproj", "{F3F85E79-F889-4AB3-8F50-5331C19B0940}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeConsole.PAL", "EmployeeConsole.PAL\EmployeeConsole.PAL.csproj", "{F3F85E79-F889-4AB3-8F50-5331C19B0940}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeConsole.Models", "EmployeeConsole.Models\EmployeeConsole.Models.csproj", "{88BD3172-A21C-4EC7-8029-43D65411976E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeConsole.Models", "EmployeeConsole.Models\EmployeeConsole.Models.csproj", "{88BD3172-A21C-4EC7-8029-43D65411976E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeConsole.Data", "EmployeeConsole.Data\EmployeeConsole.Data.csproj", "{0B08314E-18AB-4C01-BB17-409CFD2B610C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeConsole.Data", "EmployeeConsole.Data\EmployeeConsole.Data.csproj", "{0B08314E-18AB-4C01-BB17-409CFD2B610C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

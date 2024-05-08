@@ -1,4 +1,6 @@
-﻿namespace EmployeeConsole.PAL.Interfaces
+﻿using EmployeeConsole.Models;
+
+namespace EmployeeConsole.PAL.Interfaces
 {
     public interface IEmployeeUi
     {

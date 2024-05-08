@@ -38,29 +38,34 @@ namespace EmployeeConsole.PAL.Services
                     Console.ResetColor();
                     continue;
                 }
-                switch (empOption)
+                else
                 {
-                    case 1:
-                        AddEmployee();
-                        break;
-                    case 2:
-                        DisplayEmployees();
-                        break;
-                    case 3:
-                        DisplayEmpDetails();
-                        break;
-                    case 4:
-                        UpdateEmployee();
-                        break;
-                    case 5:
-                        DeleteEmployee();
-                        break;
-                    case 6:
-                        isValid = false;
-                        break;
-                    default:
-                        Console.WriteLine("Enter a Valid Option");
-                        break;
+                    switch (empOption)
+                    {
+                        case 1:
+                            AddEmployee();
+                            break;
+                        case 2:
+                            DisplayEmployees();
+                            break;
+                        case 3:
+                            DisplayEmpDetails();
+                            break;
+                        case 4:
+                            UpdateEmployee();
+                            break;
+                        case 5:
+                            DeleteEmployee();
+                            break;
+                        case 6:
+                            isValid = false;
+                            break;
+                        default:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Enter a Valid Option");
+                            Console.ResetColor();
+                            break;
+                    }
                 }
             }
         }
@@ -83,7 +88,7 @@ namespace EmployeeConsole.PAL.Services
                     Console.WriteLine($"Full Name: {employ.Value.Name}");
                     Console.WriteLine($"Role: {employ.Value.JobTitle}");
                     Console.WriteLine($"Department: {employ.Value.Department}");
-                    Console.WriteLine($"Location: {employ.Value.Location}");
+                    Console.WriteLine($"Location: {employ.Value.LocationName}");
                     Console.WriteLine($"Joining Date: {employ.Value.JoiningDate}");
                     Console.WriteLine($"Manager Name: {employ.Value.Manager}");
                     Console.WriteLine($"Project Name: {employ.Value.ProjectName}");
@@ -130,7 +135,7 @@ namespace EmployeeConsole.PAL.Services
             employee.Department = department;
 
             string location = DisplayLocationsForRoleAndDepartment(jobTitle, department);
-            employee.Location = location;
+            employee.LocationName = location;
 
             string manager = ValidateText("Manager");
             employee.Manager = manager;
@@ -260,10 +265,10 @@ namespace EmployeeConsole.PAL.Services
             if (roles.Any())
             {
                 var locations = roles
-                    .Select(role => role.Location)
+                    .Select(role => role.LocationName)
                     .Distinct()
                     .ToList();
-                Console.WriteLine("Select a Department:");
+                Console.WriteLine("Select a Location:");
                 int index = 1;
                 foreach (var loc in locations)
                 {
@@ -345,7 +350,7 @@ namespace EmployeeConsole.PAL.Services
                         employee.Department = DisplayDepartmentsForRole(employee.JobTitle);
                         break;
                     case 6:
-                        employee.Location = DisplayLocationsForRoleAndDepartment(employee.JobTitle,employee.Department);
+                        employee.LocationName = DisplayLocationsForRoleAndDepartment(employee.JobTitle,employee.Department);
                         break;
                     case 7:
                         employee.Manager = ValidateText("Manager");

@@ -24,6 +24,7 @@ namespace EmployeeConsole.BLL.Services
             }
             return true;
         }
+
         public bool AddRole(Role role)
         {
             List<Role> roles = _roleJsonOperation.LoadExistingJsonFile();

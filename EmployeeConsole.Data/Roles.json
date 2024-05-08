@@ -3,66 +3,66 @@
     "RoleName": "Full Stack Developer",
     "Department": "Product Engineering",
     "Description": "Works on both front end and back end",
-    "Location": "Hyderabad"
+    "LocationName": "Hyderabad"
   },
   {
     "RoleName": "Front end Developer",
     "Department": "Product Engineering",
     "Description": "Works on front end development of various platforms",
-    "Location": "Bangalore"
+    "LocationName": "Chennai"
   },
   {
     "RoleName": "Back end Developer",
     "Department": "Product Engineering",
     "Description": "Works on back end development of various platforms",
-    "Location": "Chennai"
+    "LocationName": "Mumbai"
   },
   {
     "RoleName": "Angular Developer",
     "Department": "Product Engineering",
     "Description": "Works on angular development",
-    "Location": "Chennai"
+    "LocationName": "Bangalore"
   },
   {
     "RoleName": "Angular Developer",
     "Department": "CRM",
     "Description": "Works on angular development",
-    "Location": "Mumbai"
+    "LocationName": "Hyderabad"
   },
   {
     "RoleName": "UI/UX Developer",
     "Department": "UI/UX",
     "Description": "Maintains look and functionality of a product",
-    "Location": "Mumbai"
+    "LocationName": "Mumbai"
   },
   {
     "RoleName": "UI/UX Developer",
     "Department": "PE",
     "Description": "Maintains look and functionality of a product",
-    "Location": "Bangalore"
+    "LocationName": "Chennai"
   },
   {
     "RoleName": "Quality Analyst",
     "Department": "Quality Analysis",
     "Description": "Works on testing of the product",
-    "Location": "Hyderabad"
+    "LocationName": "Bangalore"
   },
   {
     "RoleName": "Intern",
     "Department": "Product Engineering",
     "Description": "Learns about Various languages and implements on the task",
-    "Location": "Hyderabad"
+    "LocationName": "Hyderabad"
   },
   {
     "RoleName": "Developer",
     "Department": "Product Engineering",
     "Description": "",
-    "Location": "Hyderabad"
+    "LocationName": "Mumbai"
   },
   {
     "RoleName": "Senior Software Developer",
     "Department": "Product Engineering",
     "Description": "Product Engineering",
-    "Location": "Hyderabad"
+    "LocationName": "Chennai"
   }
 ]

@@ -1,14 +1,17 @@
 ﻿using System.Text.RegularExpressions;
 using EmployeeConsole.PAL.Interfaces;
 using EmployeeConsole.BLL.Interfaces;
+using EmployeeConsole.Models;
 namespace EmployeeConsole.PAL.Services
 {
     public class RoleUi : IRoleUi
     {
         private readonly IRoleService _roleService;
-        public RoleUi( IRoleService roleService)
+        private readonly ILocationService _locationService;
+        public RoleUi( IRoleService roleService, ILocationService locationService)
         {
             _roleService = roleService;
+            _locationService = locationService;
         }
         public void RoleManager()
         {
@@ -27,22 +30,25 @@ namespace EmployeeConsole.PAL.Services
                     Console.ResetColor();
                     continue;
                 }
-                switch (option)
+                else
                 {
-                    case 1:
-                        AddRole();
-                        break;
-                    case 2:
-                        DisplayAllRoles();
-                        break;
-                    case 3:
-                        isValid = false;
-                        break;
-                    default:
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Enter a valid option");
-                        Console.ResetColor();
-                        break;
+                    switch (option)
+                    {
+                        case 1:
+                            AddRole();
+                            break;
+                        case 2:
+                            DisplayAllRoles();
+                            break;
+                        case 3:
+                            isValid = false;
+                            break;
+                        default:
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("Enter a valid option");
+                            Console.ResetColor();
+                            break;
+                    }
                 }
             }
         }
@@ -59,6 +65,7 @@ namespace EmployeeConsole.PAL.Services
                 Console.WriteLine("Role already exists");
                 Console.ResetColor();
                 AddRole();
+                return;
             }
 
             string department = ValidateText("Department");
@@ -67,8 +74,8 @@ namespace EmployeeConsole.PAL.Services
             string description = ValidateText("Description");
             role.Description = description;
 
-            string location = ValidateText("Location");
-            role.Location = location;
+            string location = ValidateLocation("Location");
+            role.LocationName = location;
 
             if(_roleService.AddRole(role))
             { 
@@ -95,7 +102,7 @@ namespace EmployeeConsole.PAL.Services
                     Console.WriteLine($"Role Name: {role.RoleName}");
                     Console.WriteLine($"Department: {role.Department}");
                     Console.WriteLine($"Description: {role.Description}");
-                    Console.WriteLine($"Location: {role.Location}");
+                    Console.WriteLine($"Location: {role.LocationName}");
                     Console.WriteLine("======================================");
                 }
             }
@@ -127,6 +134,17 @@ namespace EmployeeConsole.PAL.Services
             }
             return text;
         }
+        public string ValidateLocation(string type)
+        {
+            Location selectedLocation = null;
+            Console.WriteLine($"Enter {type}:");
+            string input = Console.ReadLine()?? "";
+            if (_locationService.LocationExists(input))
+            {
+                selectedLocation = new Location { LocationName = input };
+                _locationService.AddLocation(selectedLocation);
+            }
+            return input;
+        }
     }
 }
-
