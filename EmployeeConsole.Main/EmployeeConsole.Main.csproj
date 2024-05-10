@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EmployeeConsole.BLL\EmployeeConsole.BLL.csproj" />
-    <ProjectReference Include="..\EmployeeConsole.PAL\EmployeeConsole.PAL.csproj" />
+    <ProjectReference Include="..\EmployeeConsole.PL\EmployeeConsole.PL.csproj" />
   </ItemGroup>
 
 </Project>

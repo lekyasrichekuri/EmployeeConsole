@@ -1,12 +1,16 @@
 ﻿using EmployeeConsole.Models;
-using System.Data;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace EmployeeConsole.BLL.Interfaces
 {
     public interface IRoleService
     {
-        bool IsRoleNameExists(string roleName);
-        bool AddRole(Role role);
-        List<Role> DisplayAll();
+        public bool IsRoleNameExists(string roleName);
+        public bool AddRole(string RoleName, string Department, string RoleDescription, string LocationName);
+        public List<Role> DisplayAll();
     }
 }

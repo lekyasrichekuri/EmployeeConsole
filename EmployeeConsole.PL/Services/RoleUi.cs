@@ -1,8 +1,8 @@
 ﻿using System.Text.RegularExpressions;
-using EmployeeConsole.PAL.Interfaces;
+using EmployeeConsole.PL.Interfaces;
 using EmployeeConsole.BLL.Interfaces;
 using EmployeeConsole.Models;
-namespace EmployeeConsole.PAL.Services
+namespace EmployeeConsole.PL.Services
 {
     public class RoleUi : IRoleUi
     {
@@ -77,7 +77,7 @@ namespace EmployeeConsole.PAL.Services
             string location = ValidateLocation("Location");
             role.LocationName = location;
 
-            if(_roleService.AddRole(role))
+            if(_roleService.AddRole(roleName,department,description,location))
             { 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Role added successfully");

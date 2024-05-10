@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using EmployeeConsole.PAL.Services;
-using EmployeeConsole.PAL.Interfaces;
+using EmployeeConsole.PL.Services;
+using EmployeeConsole.PL.Interfaces;
 using EmployeeConsole.BLL.Services;
 using EmployeeConsole.BLL.Interfaces;
 using EmployeeConsole.DAL.Interfaces;
@@ -16,9 +16,7 @@ namespace EmployeeConsole.Main
                                   .AddTransient<IEmployeeService, EmployeeService>()
                                   .AddTransient<ILocationService, LocationService>()
                                   .AddTransient<IRoleService, RoleService>()
-                                  .AddTransient<IEmployeeJsonOperation, EmployeeJsonOperation>()
-                                  .AddTransient<ILocationJsonOperation, LocationJsonOperation>()
-                                  .AddTransient<IRoleJsonOperation, RoleJsonOperation>()
+                                  .AddTransient<IDbService, DbService>()
                                   .AddTransient<IEmployeeUi, EmployeeUi>()
                                   .AddTransient<IRoleUi, RoleUi>()
                                   .BuildServiceProvider();

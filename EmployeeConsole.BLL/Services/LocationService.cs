@@ -1,41 +1,57 @@
-﻿using EmployeeConsole.DAL.Interfaces;
-using EmployeeConsole.Models;
+﻿using System.Data.SqlClient;
+using EmployeeConsole.DAL.Interfaces;
 using EmployeeConsole.BLL.Interfaces;
-using EmployeeConsole.DAL.Services;
+using EmployeeConsole.Models;
+
 
 namespace EmployeeConsole.BLL.Services
 {
-    public class LocationService: ILocationService
+    public class LocationService:ILocationService
     {
-        private readonly ILocationJsonOperation _locationJsonOperation;
-        public LocationService(ILocationJsonOperation locationJsonOperation)
+        private readonly IDbService _dbService;
+        public LocationService(IDbService dbService)
         {
-            _locationJsonOperation = locationJsonOperation;
+            _dbService = dbService;
         }
 
         public bool LocationExists(string locationName)
         {
-            List<Models.Location> locationsList = _locationJsonOperation.LoadExistingJsonFile();
-            var locationNames = locationsList.Select(location => location.LocationName);
-            if (locationNames.Contains(locationName))
+            using (SqlConnection connection = new SqlConnection(_dbService.GetConnectionString()))
             {
-                return false;
+                string query = " select * from locations where LocationName=@locationName";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    connection.Open();
+                    command.Parameters.AddWithValue("@LocationName", locationName);
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        reader.Close();
+                        return false;
+                    }
+                    else
+                    {
+                        reader.Close();
+                        return true;
+                    }
+                }
+            }
+        }
+        public bool AddLocation(Location location)
+        {
+            using (SqlConnection connection = new SqlConnection(_dbService.GetConnectionString()))
+            {
+                connection.Open();
+                string insertQuery = "INSERT INTO Locations(LocationName) VALUES (@LocationName)";
+                using (SqlCommand command = new SqlCommand(insertQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@LocationName", location.LocationName);
+                    command.ExecuteNonQuery();
+                }
             }
             return true;
         }
 
-        public List<Location> DisplayAll()
-        {
-            List<Models.Location> location = _locationJsonOperation.LoadExistingJsonFile();
-            return location;
-        }
 
-        public bool AddLocation(Location location)
-        {
-            List<Location> locations = _locationJsonOperation.LoadExistingJsonFile();
-            locations.Add(location);
-            _locationJsonOperation.SaveObjectsToJson(locations);
-            return true;
-        }
     }
 }

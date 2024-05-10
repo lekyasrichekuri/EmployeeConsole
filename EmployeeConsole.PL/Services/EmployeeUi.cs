@@ -2,18 +2,18 @@
 using System.Reflection;
 using System.Text.RegularExpressions;
 using EmployeeConsole.BLL.Interfaces;
-using EmployeeConsole.PAL.Interfaces;
-using EmployeeConsole.PAL.Exceptions;
+using EmployeeConsole.PL.Interfaces;
+using EmployeeConsole.PL.Exceptions;
 using EmployeeConsole.Models;
 
-namespace EmployeeConsole.PAL.Services
+namespace EmployeeConsole.PL.Services
 {
     public class EmployeeUi : IEmployeeUi
     {
         private readonly IEmployeeService _employeeService;
         private readonly IRoleService _roleService;
-        public EmployeeUi( IEmployeeService employeeService,IRoleService roleService)
-        {
+        public EmployeeUi(IEmployeeService employeeService,IRoleService roleService)
+        { 
             _employeeService = employeeService;
             _roleService = roleService;
         }
@@ -78,14 +78,15 @@ namespace EmployeeConsole.PAL.Services
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("No employees to display");
                 Console.ResetColor();
-            }
+            }            
             else
             {
                 foreach (var employ in employee)
                 {
                     Console.WriteLine("Employee Details:");
                     Console.WriteLine($"Employee Id: {employ.Key}");
-                    Console.WriteLine($"Full Name: {employ.Value.Name}");
+                    Console.WriteLine($"First Name: {employ.Value.FirstName}");
+                    Console.WriteLine($"Last Name: {employ.Value.LastName}");
                     Console.WriteLine($"Role: {employ.Value.JobTitle}");
                     Console.WriteLine($"Department: {employ.Value.Department}");
                     Console.WriteLine($"Location: {employ.Value.LocationName}");
@@ -104,17 +105,11 @@ namespace EmployeeConsole.PAL.Services
             string employeeId = GenerateEmployeeId();
             employee.EmployeeId = employeeId; 
 
-            if (_employeeService.IsEmployeeIdExists(employeeId) == false)
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Employee Id already exists");
-                Console.ResetColor();
-                AddEmployee();
-            }
-
             string firstName = ValidateText("First Name");
+            employee.FirstName= firstName;
+
             string lastName = ValidateText("Last Name");
-            employee.Name = firstName + " " + lastName;
+            employee.LastName = lastName;
 
             DateTime dateOfBirth = ValidateDate("Birth");
             employee.DateOfBirth = dateOfBirth.ToShortDateString();
@@ -143,12 +138,7 @@ namespace EmployeeConsole.PAL.Services
             string project = ValidateText("Project");
             employee.ProjectName = project;
 
-            if(_employeeService.AddEmployee(employee))
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Employee added successfully");
-                Console.ResetColor();
-            }
+            _employeeService.AddEmployeeToDb(employeeId, firstName, lastName, dateOfBirth, email, phoneNumber, joinDate, jobTitle, department, location, manager, project);
         }
 
         public string GenerateEmployeeId()
@@ -315,15 +305,16 @@ namespace EmployeeConsole.PAL.Services
             while (toUpdate)
             {
                 Console.WriteLine("Enter the option of the field to be updated:");
-                Console.WriteLine("1. Name");
-                Console.WriteLine("2. Email");
-                Console.WriteLine("3. Phone number");
-                Console.WriteLine("4. Job Tile");
-                Console.WriteLine("5. Department");
-                Console.WriteLine("6. Location");
-                Console.WriteLine("7. Manager");
-                Console.WriteLine("8. Project");
-                Console.WriteLine("9. Go Back");
+                Console.WriteLine("1. FirstName");
+                Console.WriteLine("2. LastName");
+                Console.WriteLine("3. Email");
+                Console.WriteLine("4. Phone number");
+                Console.WriteLine("5. Job Tile");
+                Console.WriteLine("6. Department");
+                Console.WriteLine("7. Location");
+                Console.WriteLine("8. Manager");
+                Console.WriteLine("9. Project");
+                Console.WriteLine("10. Go Back");
                 int option;
                 if (!int.TryParse(Console.ReadLine(), out option))
                 {
@@ -335,30 +326,33 @@ namespace EmployeeConsole.PAL.Services
                 switch (option)
                 {
                     case 1:
-                        employee.Name = ValidateText("Name");
+                        employee.FirstName = ValidateText("FirstName");
                         break;
                     case 2:
-                        employee.Email = ValidateEmail();
+                        employee.LastName = ValidateText("LastName");
                         break;
                     case 3:
-                        employee.PhoneNumber = ValidatePhoneNumber();
+                        employee.Email = ValidateEmail();
                         break;
                     case 4:
-                        employee.JobTitle = DisplayJobTitles();
+                        employee.PhoneNumber = ValidatePhoneNumber();
                         break;
                     case 5:
-                        employee.Department = DisplayDepartmentsForRole(employee.JobTitle);
+                        employee.JobTitle = DisplayJobTitles();
                         break;
                     case 6:
-                        employee.LocationName = DisplayLocationsForRoleAndDepartment(employee.JobTitle,employee.Department);
+                        employee.Department = DisplayDepartmentsForRole(employee.JobTitle);
                         break;
                     case 7:
-                        employee.Manager = ValidateText("Manager");
+                        employee.LocationName = DisplayLocationsForRoleAndDepartment(employee.JobTitle,employee.Department);
                         break;
                     case 8:
-                        employee.ProjectName = ValidateText("Project");
+                        employee.Manager = ValidateText("Manager");
                         break;
                     case 9:
+                        employee.ProjectName = ValidateText("Project");
+                        break;
+                    case 10:
                         toUpdate = false;
                         break;
                     default:
@@ -367,13 +361,13 @@ namespace EmployeeConsole.PAL.Services
                         Console.ResetColor();
                         break;
                 }
-                if (option!=0 && option<=8)
+                if (option!=0 && option<=9)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Employee details updated successfully");
                     Console.ResetColor();
                 }
-                _employeeService.UpdateEmployee(employee);
+                _employeeService.UpdateEmployeeDetails(employee);
             }
         }
 

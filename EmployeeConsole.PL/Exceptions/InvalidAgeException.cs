@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EmployeeConsole.PAL.Exceptions
+namespace EmployeeConsole.PL.Exceptions
 {
     public class InvalidAgeException : Exception
     { 

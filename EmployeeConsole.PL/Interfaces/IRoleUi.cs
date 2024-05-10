@@ -1,6 +1,6 @@
 ﻿using EmployeeConsole.Models;
 
-namespace EmployeeConsole.PAL.Interfaces
+namespace EmployeeConsole.PL.Interfaces
 {
     public interface IRoleUi
     {
