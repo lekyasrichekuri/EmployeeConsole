@@ -138,7 +138,7 @@ namespace EmployeeConsole.PL.Services
             string project = ValidateText("Project");
             employee.ProjectName = project;
 
-            _employeeService.AddEmployeeToDb(employeeId, firstName, lastName, dateOfBirth, email, phoneNumber, joinDate, jobTitle, department, location, manager, project);
+            _employeeService.AddEmployee(employeeId, firstName, lastName, dateOfBirth, email, phoneNumber, joinDate, jobTitle, department, location, manager, project);
         }
 
         public string GenerateEmployeeId()
@@ -365,9 +365,9 @@ namespace EmployeeConsole.PL.Services
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Employee details updated successfully");
+                    Console.WriteLine(_employeeService.UpdateEmployeeDetails(employee) + " no.of lines affected");
                     Console.ResetColor();
                 }
-                _employeeService.UpdateEmployeeDetails(employee);
             }
         }
 

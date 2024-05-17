@@ -10,7 +10,6 @@ namespace EmployeeConsole.BLL.Interfaces
     public interface ILocationService
     {
         public bool AddLocation(Location LocationName);
-        public bool LocationExists(string locationName);
-
+        public bool IsLocationExists(string locationName);
     }
 }

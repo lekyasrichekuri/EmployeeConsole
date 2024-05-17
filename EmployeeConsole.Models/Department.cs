@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace EmployeeConsole.Models
 {
-    public class Location
+    public class Department
     {
         public int Id { get; set; }
-        public string LocationName { get; set; }
+        public string DepartmentName { get; set; }
     }
 }
