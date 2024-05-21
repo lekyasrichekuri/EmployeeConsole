@@ -9,5 +9,7 @@ namespace EmployeeConsole.PL.Interfaces
         void RoleManager();
         string ValidateText(string type);
         public string ValidateLocation(string type);
+        public string ValidateDepartment(string type);
+
     }
 }

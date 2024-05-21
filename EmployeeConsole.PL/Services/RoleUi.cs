@@ -2,16 +2,20 @@
 using EmployeeConsole.PL.Interfaces;
 using EmployeeConsole.BLL.Interfaces;
 using EmployeeConsole.Models;
+using EmployeeConsole.BLL.Services;
+using System.Text;
 namespace EmployeeConsole.PL.Services
 {
     public class RoleUi : IRoleUi
     {
         private readonly IRoleService _roleService;
         private readonly ILocationService _locationService;
-        public RoleUi( IRoleService roleService, ILocationService locationService)
+        private readonly IDepartmentService _departmentService;
+        public RoleUi(IRoleService roleService, ILocationService locationService, IDepartmentService departmentService)
         {
             _roleService = roleService;
             _locationService = locationService;
+            _departmentService = departmentService;
         }
         public void RoleManager()
         {
@@ -56,6 +60,10 @@ namespace EmployeeConsole.PL.Services
         public void AddRole()
         {
             Models.Role role = new Models.Role();
+
+            //int id = GenerateId();
+            //role.Id = id;
+
             string roleName = ValidateText("Role Name");
             role.RoleName = roleName;
 
@@ -68,7 +76,7 @@ namespace EmployeeConsole.PL.Services
                 return;
             }
 
-            string department = ValidateText("Department");
+            string department = ValidateDepartment("Department");
             role.Department = department;
 
             string description = ValidateText("Description");
@@ -77,14 +85,27 @@ namespace EmployeeConsole.PL.Services
             string location = ValidateLocation("Location");
             role.LocationName = location;
 
-            if(_roleService.AddRole(roleName,department,description,location))
-            { 
+            if (_roleService.AddRole( roleName, department, description, location))
+            {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Role added successfully");
                 Console.ResetColor();
             }
         }
 
+        public int GenerateId()
+        {
+            List<Role> roles = _roleService.DisplayAll();
+            int maximumId = 0;
+            foreach (var role in roles)
+            {
+                if (role.Id > maximumId)
+                {
+                    maximumId = role.Id;
+                }
+            }
+            return maximumId + 1;
+        }
         public void DisplayAllRoles()
         {
             List<Models.Role> roles = _roleService.DisplayAll();
@@ -99,6 +120,7 @@ namespace EmployeeConsole.PL.Services
                 foreach (var role in roles)
                 {
                     Console.WriteLine("Role Details:");
+                    Console.WriteLine($"ID: {role.Id}");
                     Console.WriteLine($"Role Name: {role.RoleName}");
                     Console.WriteLine($"Department: {role.Department}");
                     Console.WriteLine($"Description: {role.Description}");
@@ -138,11 +160,24 @@ namespace EmployeeConsole.PL.Services
         {
             Location selectedLocation = null;
             Console.WriteLine($"Enter {type}:");
-            string input = Console.ReadLine()?? "";
-            if (_locationService.LocationExists(input))
-            {
+            string input = Console.ReadLine() ?? "";
+            if (_locationService.IsLocationExists(input))
+            { 
                 selectedLocation = new Location { LocationName = input };
                 _locationService.AddLocation(selectedLocation);
+            }
+            return input;
+        }
+
+        public string ValidateDepartment(string type)
+        {
+            Department selectedDepartment = null;
+            Console.WriteLine($"Enter {type}:");
+            string input = Console.ReadLine() ?? "";
+            if (_departmentService.IsDepartmentExists(input))
+            {
+                selectedDepartment = new Department { DepartmentName = input };
+                _departmentService.AddDepartment(selectedDepartment);
             }
             return input;
         }

@@ -9,7 +9,7 @@ namespace EmployeeConsole.BLL.Interfaces
 {
     public interface IEmployeeService
     {
-        public void AddEmployeeToDb(string id, string firstName, string lastName, DateTime? dateOfBirth, string Email, string? Phone, DateTime joinDate, string location, string jobTitle, string department, string? manager, string? project);
+        public void AddEmployee(string id, string firstName, string lastName, string? dateOfBirth, string Email, string? Phone, string joinDate, string jobTitle, string department, string location, string? manager, string? project);
         public Dictionary<string, Employee> DisplayEmployees();
         public int UpdateEmployeeDetails(Employee employee);
         public Employee DisplayEmpDetails(string employeeId);

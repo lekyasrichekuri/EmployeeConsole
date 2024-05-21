@@ -10,7 +10,7 @@ namespace EmployeeConsole.BLL.Interfaces
     public interface IRoleService
     {
         public bool IsRoleNameExists(string roleName);
-        public bool AddRole(string RoleName, string Department, string RoleDescription, string LocationName);
+        public bool AddRole( string RoleName, string Department, string RoleDescription, string LocationName);
         public List<Role> DisplayAll();
     }
 }

@@ -16,7 +16,7 @@ namespace EmployeeConsole.PL.Interfaces
         void EmployeeManager();
         string ValidateEmployeeId();
         string ValidateText(string type);
-        DateTime ValidateDate(string type);
+        string ValidateDate(string type);
         string ValidateEmail();
         string ValidatePhoneNumber();
     }

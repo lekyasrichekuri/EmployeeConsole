@@ -12,12 +12,12 @@ namespace EmployeeConsole.PL.Services
     {
         private readonly IEmployeeService _employeeService;
         private readonly IRoleService _roleService;
-        public EmployeeUi(IEmployeeService employeeService,IRoleService roleService)
-        { 
+        public EmployeeUi(IEmployeeService employeeService, IRoleService roleService)
+        {
             _employeeService = employeeService;
             _roleService = roleService;
         }
-     
+
         public void EmployeeManager()
         {
             bool isValid = true;
@@ -78,7 +78,7 @@ namespace EmployeeConsole.PL.Services
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("No employees to display");
                 Console.ResetColor();
-            }            
+            }
             else
             {
                 foreach (var employ in employee)
@@ -103,16 +103,16 @@ namespace EmployeeConsole.PL.Services
             Models.Employee employee = new Models.Employee();
 
             string employeeId = GenerateEmployeeId();
-            employee.EmployeeId = employeeId; 
+            employee.EmployeeId = employeeId;
 
             string firstName = ValidateText("First Name");
-            employee.FirstName= firstName;
+            employee.FirstName = firstName;
 
             string lastName = ValidateText("Last Name");
             employee.LastName = lastName;
 
-            DateTime dateOfBirth = ValidateDate("Birth");
-            employee.DateOfBirth = dateOfBirth.ToShortDateString();
+            string dateOfBirth = ValidateDate("Birth");
+            employee.DateOfBirth = dateOfBirth;
 
             string email = ValidateEmail();
             employee.Email = email;
@@ -120,8 +120,8 @@ namespace EmployeeConsole.PL.Services
             string phoneNumber = ValidatePhoneNumber();
             employee.PhoneNumber = phoneNumber;
 
-            DateTime joinDate = ValidateDate("Joining");
-            employee.JoiningDate = joinDate.ToShortDateString();
+            string joinDate = ValidateDate("Joining");
+            employee.JoiningDate = joinDate;
 
             string jobTitle = DisplayJobTitles();
             employee.JobTitle = jobTitle;
@@ -138,7 +138,7 @@ namespace EmployeeConsole.PL.Services
             string project = ValidateText("Project");
             employee.ProjectName = project;
 
-            _employeeService.AddEmployeeToDb(employeeId, firstName, lastName, dateOfBirth, email, phoneNumber, joinDate, jobTitle, department, location, manager, project);
+            _employeeService.AddEmployee(employeeId, firstName, lastName, dateOfBirth, email, phoneNumber, joinDate, jobTitle, department, location, manager, project);
         }
 
         public string GenerateEmployeeId()
@@ -157,6 +157,7 @@ namespace EmployeeConsole.PL.Services
                 }
             }
             string nextEmployeeId = "TZ" + (maximumId + 1).ToString().PadLeft(4, '0');
+            Console.WriteLine("EmployeeID: " + nextEmployeeId);
             return nextEmployeeId;
         }
 
@@ -183,7 +184,7 @@ namespace EmployeeConsole.PL.Services
                     Console.WriteLine("Invalid option. Please enter a number.");
                     Console.ResetColor();
                 }
-                if (jobRole==0 || jobRole>=index)
+                if (jobRole == 0 || jobRole >= index)
                 {
                     Console.WriteLine("Enter the correct option");
                     return DisplayJobTitles();
@@ -294,7 +295,7 @@ namespace EmployeeConsole.PL.Services
         {
             string employeeId = ValidateEmployeeId();
             Models.Employee employee = _employeeService.DisplayEmpDetails(employeeId);
-            if(employee==null)
+            if (employee == null)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Employee id does not exists");
@@ -344,7 +345,7 @@ namespace EmployeeConsole.PL.Services
                         employee.Department = DisplayDepartmentsForRole(employee.JobTitle);
                         break;
                     case 7:
-                        employee.LocationName = DisplayLocationsForRoleAndDepartment(employee.JobTitle,employee.Department);
+                        employee.LocationName = DisplayLocationsForRoleAndDepartment(employee.JobTitle, employee.Department);
                         break;
                     case 8:
                         employee.Manager = ValidateText("Manager");
@@ -361,13 +362,13 @@ namespace EmployeeConsole.PL.Services
                         Console.ResetColor();
                         break;
                 }
-                if (option!=0 && option<=9)
+                if (option != 0 && option <= 9)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Employee details updated successfully");
+                    Console.WriteLine(_employeeService.UpdateEmployeeDetails(employee) + " no.of lines affected");
                     Console.ResetColor();
                 }
-                _employeeService.UpdateEmployeeDetails(employee);
             }
         }
 
@@ -375,7 +376,7 @@ namespace EmployeeConsole.PL.Services
         {
             string employeeId = ValidateEmployeeId();
             Models.Employee employee = _employeeService.DisplayEmpDetails(employeeId);
-            if (employee==null)
+            if (employee == null)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("Employee Id does not exist");
@@ -394,7 +395,7 @@ namespace EmployeeConsole.PL.Services
         public void DeleteEmployee()
         {
             string employeeId = ValidateEmployeeId();
-            if(_employeeService.DeleteEmployee(employeeId)== true)
+            if (_employeeService.DeleteEmployee(employeeId) == true)
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Employee deleted successfully");
@@ -465,32 +466,32 @@ namespace EmployeeConsole.PL.Services
             return text;
         }
 
-        public DateTime ValidateDate(string type)
+        public string ValidateDate(string type)
         {
-            DateTime date;
             while (true)
             {
                 Console.WriteLine($"Enter {type} Date in the format DD-MM-YYYY:");
                 string input = Console.ReadLine() ?? "";
                 if (type == "Birth" && string.IsNullOrWhiteSpace(input))
                 {
-                    return DateTime.MinValue;
+                    return DateTime.MinValue.ToString();
                 }
-                else if (DateTime.TryParseExact(input, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                else if (DateTime.TryParseExact(input, "dd-MM-yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
                 {
+                    string date = parsedDate.ToString("yyyy-MM-dd");
                     try
                     {
                         if (type == "Birth" && CalculateAge(date) < 18)
                         {
                             throw new InvalidAgeException("Age must be greater than 18");
                         }
-                        else if(type == "Birth" && CalculateAge(date) > 60)
+                        else if (type == "Birth" && CalculateAge(date) > 60)
                         {
                             throw new InvalidAgeException("Age must be less than 60");
                         }
                         return date;
                     }
-                    catch (InvalidAgeException ex) 
+                    catch (InvalidAgeException ex)
                     {
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.WriteLine(ex.Message);
@@ -506,15 +507,19 @@ namespace EmployeeConsole.PL.Services
             }
         }
 
-        private int CalculateAge(DateTime birthDate)
+        private int CalculateAge(string birthDateStr)
         {
+            DateTime birthDate = DateTime.Parse(birthDateStr);
             int age = DateTime.Now.Year - birthDate.Year;
-            if(DateTime.Now.DayOfYear<birthDate.DayOfYear)
+
+            if (DateTime.Now.DayOfYear < birthDate.DayOfYear)
             {
                 age--;
             }
+
             return age;
         }
+
 
         public string ValidateEmail()
         {
@@ -551,7 +556,7 @@ namespace EmployeeConsole.PL.Services
                     isValidPhoneNumber = true;
                 }
                 else if (phoneNumber.Length != 10 || !IsNumeric(phoneNumber))
-                { 
+                {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Enter a valid 10-digit PhoneNumber containing only digits.");
                     Console.ResetColor();

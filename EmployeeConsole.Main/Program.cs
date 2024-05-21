@@ -16,6 +16,7 @@ namespace EmployeeConsole.Main
                                   .AddTransient<IEmployeeService, EmployeeService>()
                                   .AddTransient<ILocationService, LocationService>()
                                   .AddTransient<IRoleService, RoleService>()
+                                  .AddTransient<IDepartmentService, DepartmentService>()
                                   .AddTransient<IDbService, DbService>()
                                   .AddTransient<IEmployeeUi, EmployeeUi>()
                                   .AddTransient<IRoleUi, RoleUi>()
