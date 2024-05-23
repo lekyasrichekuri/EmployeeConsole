@@ -5,6 +5,8 @@ using EmployeeConsole.BLL.Services;
 using EmployeeConsole.BLL.Interfaces;
 using EmployeeConsole.DAL.Interfaces;
 using EmployeeConsole.DAL.Services;
+using EmployeeConsole.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace EmployeeConsole.Main
 {
@@ -12,12 +14,18 @@ namespace EmployeeConsole.Main
     {
         public static void Main(string[] args)
         {
+            IConfiguration configuration = new ConfigurationBuilder()
+                                           .AddJsonFile("appsettings.json")
+                                           .Build();
+
+            var connectionString = configuration.GetConnectionString("Database");
             var serviceProvider = new ServiceCollection()
                                   .AddTransient<IEmployeeService, EmployeeService>()
                                   .AddTransient<ILocationService, LocationService>()
                                   .AddTransient<IRoleService, RoleService>()
                                   .AddTransient<IDepartmentService, DepartmentService>()
                                   .AddTransient<IDbService, DbService>()
+                                  .AddTransient<LekyaEfContext>(provider => new LekyaEfContext(connectionString))
                                   .AddTransient<IEmployeeUi, EmployeeUi>()
                                   .AddTransient<IRoleUi, RoleUi>()
                                   .BuildServiceProvider();

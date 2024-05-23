@@ -1,96 +1,95 @@
-﻿using System.Data.SqlClient;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using EmployeeConsole.DAL.Interfaces;
 using EmployeeConsole.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeConsole.DAL.Services
 {
     public class DbService : IDbService
     {
-        public bool AddEmployee(string id, string firstName, string lastName, string? dateOfBirth, string Email, string? Phone, string joinDate, string jobTitle, string department, string location, string? manager, string? project)
+        private readonly LekyaEfContext _context;
+        public DbService(LekyaEfContext context)
+        {
+            _context = context;
+        }
+
+        public bool AddEmployee(string id, string firstName, string lastName, string? dateOfBirth, string email, string? phone, string joinDate, string jobTitle, string department, string location, string? manager, string? project)
         {
             try
             {
-                using (var myContext = new Context())
+                var newEmployee = new Employee
                 {
-                    myContext.Employees.Add(new Employee()
-                    {
-                        EmployeeId = id,
-                        FirstName = firstName,
-                        LastName = lastName,
-                        DateOfBirth = dateOfBirth,
-                        Email = Email,
-                        PhoneNumber = Phone,
-                        JoiningDate = joinDate,
-                        JobTitle = jobTitle,
-                        Department = department,
-                        LocationName = location,
-                        Manager = manager,
-                        ProjectName = project
-                    }
-                    );
-                    myContext.SaveChanges();
-                }
+                    EmployeeId = id,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    DateOfBirth = dateOfBirth,
+                    Email = email,
+                    PhoneNumber = phone,
+                    JoiningDate = joinDate,
+                    JobTitle = jobTitle,
+                    Department = department,
+                    LocationName = location,
+                    Manager = manager,
+                    ProjectName = project
+                };
+
+                _context.Employees.Add(newEmployee);
+                _context.SaveChanges();
                 return true;
             }
             catch (Exception e)
             {
-                Console.WriteLine("An error has occurred while adding an employee\n " + e.Message);
+                Console.WriteLine($"An error occurred while adding an employee: {e.Message}");
                 return false;
             }
         }
 
         public Dictionary<string, Employee> DisplayEmployees()
         {
-            Dictionary<string, Employee> Employees = new Dictionary<string, Employee>();
+            var employees = new Dictionary<string, Employee>();
             try
             {
-                using (var myContext = new Context())
+                var employeesFromDb = _context.Employees.ToList();
+                foreach (var employee in employeesFromDb)
                 {
-                    var employeesFromDb = myContext.Employees.ToList();
-                    foreach (var employee in employeesFromDb)
-                    {
-                        Employees.Add(employee.EmployeeId, employee);
-                    }
+                    employees.Add(employee.EmployeeId, employee);
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("An error has occurred while displaying the employees\n" + e.Message);
+                Console.WriteLine($"An error occurred while displaying employees: {e.Message}");
             }
-            return Employees;
+            return employees;
         }
 
         public int UpdateEmployee(Employee employee)
         {
             try
             {
-                using (var myContext = new Context())
-                {
-                    var employeeToUpdate = myContext.Employees.Find(employee.EmployeeId);
+                var employeeToUpdate = _context.Employees.Find(employee.EmployeeId);
 
-                    if (employeeToUpdate != null)
-                    {
-                        employeeToUpdate.FirstName = employee.FirstName;
-                        employeeToUpdate.LastName = employee.LastName;
-                        employeeToUpdate.Email = employee.Email;
-                        employeeToUpdate.PhoneNumber = employee.PhoneNumber;
-                        employeeToUpdate.JobTitle = employee.JobTitle;
-                        employeeToUpdate.Department = employee.Department;
-                        employeeToUpdate.LocationName = employee.LocationName;
-                        employeeToUpdate.Manager = employee.Manager;
-                        employeeToUpdate.ProjectName = employee.ProjectName;
-                        return myContext.SaveChanges();
-                    }
-                    else
-                    {
-                        return 0;
-                    }
+                if (employeeToUpdate != null)
+                {
+                    employeeToUpdate.FirstName = employee.FirstName;
+                    employeeToUpdate.LastName = employee.LastName;
+                    employeeToUpdate.Email = employee.Email;
+                    employeeToUpdate.PhoneNumber = employee.PhoneNumber;
+                    employeeToUpdate.JobTitle = employee.JobTitle;
+                    employeeToUpdate.Department = employee.Department;
+                    employeeToUpdate.LocationName = employee.LocationName;
+                    employeeToUpdate.Manager = employee.Manager;
+                    employeeToUpdate.ProjectName = employee.ProjectName;
+                    return _context.SaveChanges();
+                }
+                else
+                {
+                    return 0;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("An error has occurred while updating an employee\n" + e.Message);
+                Console.WriteLine($"An error occurred while updating an employee: {e.Message}");
                 return 0;
             }
         }
@@ -99,23 +98,20 @@ namespace EmployeeConsole.DAL.Services
         {
             try
             {
-                using (var myContext = new Context())
+                var employee = _context.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
+                if (employee != null)
                 {
-                    var employee = myContext.Employees.FirstOrDefault(e => e.EmployeeId == employeeId);
-                    if (employee != null)
-                    {
-                        return employee;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Employee doesn't exist");
-                        return null;
-                    }
+                    return employee;
+                }
+                else
+                {
+                    Console.WriteLine("Employee doesn't exist");
+                    return null;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("An error has occurred while displaying employee details\n" + e.Message);
+                Console.WriteLine($"An error occurred while displaying employee details: {e.Message}");
                 return null;
             }
         }
@@ -124,69 +120,59 @@ namespace EmployeeConsole.DAL.Services
         {
             try
             {
-                using (var myContext = new Context())
+                var employeeToDelete = _context.Employees.Find(employeeId);
+                if (employeeToDelete != null)
                 {
-                    var employeeToDelete = myContext.Employees.Find(employeeId);
-                    if (employeeToDelete != null)
-                    {
-                        myContext.Employees.Remove(employeeToDelete);
-                        myContext.SaveChanges();
-                        return true;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Employee doesn't exist");
-                        return false;
-                    }
+                    _context.Employees.Remove(employeeToDelete);
+                    _context.SaveChanges();
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine("Employee doesn't exist");
+                    return false;
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("An error has occurred while deleting an employee\n" + e.Message);
+                Console.WriteLine($"An error occurred while deleting an employee: {e.Message}");
                 return false;
             }
         }
-    
+
         public List<Role> DisplayRoles()
         {
-            List<Role> Roles = new List<Role>();
+            var roles = new List<Role>();
             try
             {
-                using (var myContext = new Context())
-                {
-                    Roles = myContext.Roles.ToList();
-                }
+                roles = _context.Roles.ToList();
             }
             catch (Exception e)
             {
-                Console.WriteLine("An error has occurred while displaying the roles \n" + e.Message);
+                Console.WriteLine($"An error occurred while displaying roles: {e.Message}");
             }
-            return Roles;
+            return roles;
         }
 
-        public bool AddRole( string RoleName, string Department, string RoleDescription, string LocationName)
+        public bool AddRole(string roleName, string department, string roleDescription, string locationName)
         {
             try
             {
-                using (var myContext = new Context())
+                var newRole = new Role
                 {
-                    var newRole = new Role
-                    {
-                       // Id = Id,
-                        RoleName = RoleName,
-                        Department = Department,
-                        Description = RoleDescription,
-                        LocationName = LocationName
-                    };
+                    RoleName = roleName,
+                    Department = department,
+                    Description = roleDescription,
+                    LocationName = locationName
+                };
 
-                    myContext.Roles.Add(newRole);
-                    myContext.SaveChanges();
-                }
+                _context.Roles.Add(newRole);
+                _context.SaveChanges();
                 return true;
             }
             catch (Exception e)
             {
-                Console.WriteLine("An error occurred while adding the role \n" + e.InnerException.Message);
+                Console.WriteLine($"An error occurred while adding the role: {e.Message}");
                 return false;
             }
         }
@@ -195,29 +181,26 @@ namespace EmployeeConsole.DAL.Services
         {
             try
             {
-                using (var myContext = new Context())
+                if (tableName == "Roles")
                 {
-                    if (tableName == "Roles")
-                    {
-                        if (myContext.Roles.FirstOrDefault(r => r.RoleName == value) == null)
-                            return false;
-                    }
-                    else if (tableName == "Department")
-                    {
-                        if (myContext.departments.FirstOrDefault(r=>r.DepartmentName==value) == null)
-                            return false;
-                    }
-                    else if (tableName == "Locations")
-                    {
-                        if (myContext.locations.FirstOrDefault(r=>r.LocationName==value) == null)
-                            return false;
-                    }
-                    return true;
+                    if (_context.Roles.FirstOrDefault(r => r.RoleName == value) == null)
+                        return false;
                 }
+                else if (tableName == "Department")
+                {
+                    if (_context.Departments.FirstOrDefault(r => r.DepartmentName == value) == null)
+                        return false;
+                }
+                else if (tableName == "Locations")
+                {
+                    if (_context.Locations.FirstOrDefault(r => r.LocationName == value) == null)
+                        return false;
+                }
+                return true;
             }
             catch (Exception e)
             {
-                Console.WriteLine($"An error has occurred while checking if the {value} exists \n" + e.Message);
+                Console.WriteLine($"An error occurred while checking if the {value} exists: {e.Message}");
                 return false;
             }
         }
@@ -226,16 +209,13 @@ namespace EmployeeConsole.DAL.Services
         {
             try
             {
-                using (var myContext = new Context())
-                {
-                    myContext.Set<T>().Add(entity);
-                    myContext.SaveChanges();
-                    return true;
-                }
+                _context.Set<T>().Add(entity);
+                _context.SaveChanges();
+                return true;
             }
             catch (Exception e)
             {
-                Console.WriteLine($"An error has occurred while adding {entity}: {e.Message}");
+                Console.WriteLine($"An error occurred while adding {entity}: {e.Message}");
                 return false;
             }
         }
