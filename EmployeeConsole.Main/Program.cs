@@ -14,18 +14,13 @@ namespace EmployeeConsole.Main
     {
         public static void Main(string[] args)
         {
-            IConfiguration configuration = new ConfigurationBuilder()
-                                           .AddJsonFile("appsettings.json")
-                                           .Build();
-
-            var connectionString = configuration.GetConnectionString("Database");
             var serviceProvider = new ServiceCollection()
                                   .AddTransient<IEmployeeService, EmployeeService>()
                                   .AddTransient<ILocationService, LocationService>()
                                   .AddTransient<IRoleService, RoleService>()
                                   .AddTransient<IDepartmentService, DepartmentService>()
                                   .AddTransient<IDbService, DbService>()
-                                  .AddTransient<LekyaEfContext>(provider => new LekyaEfContext(connectionString))
+                                  .AddTransient<LekyaEfContext>()
                                   .AddTransient<IEmployeeUi, EmployeeUi>()
                                   .AddTransient<IRoleUi, RoleUi>()
                                   .BuildServiceProvider();

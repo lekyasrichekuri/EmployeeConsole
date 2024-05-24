@@ -7,13 +7,6 @@ namespace EmployeeConsole.Models;
 public partial class LekyaEfContext : DbContext
 {
 
-    private readonly string _connectionString;
-
-    public LekyaEfContext(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
-
     public virtual DbSet<Department> Departments { get; set; }
 
     public virtual DbSet<Employee> Employees { get; set; }
@@ -26,7 +19,7 @@ public partial class LekyaEfContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlServer(_connectionString);
+            optionsBuilder.UseSqlServer("data source=SQL-DEV; database=Lekya_EF; integrated security=SSPI; Encrypt=false;");
         }
     }
 
